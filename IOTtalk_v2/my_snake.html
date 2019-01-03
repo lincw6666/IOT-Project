@@ -94,11 +94,13 @@
 	}
 
 	void check_collision() {
+		// Hit the wall.
 		if (nowx >= 640 || nowx < 10 || nowy >= 480 || nowy < 10) {
 			is_collision = true;
 			return;
 		}
 
+		// Hit the snake's body.
 		for (int i = 1; i < now_len-2; i++) {
 			if (point_dist(i) < (8*8)) {
 				is_collision = true;
