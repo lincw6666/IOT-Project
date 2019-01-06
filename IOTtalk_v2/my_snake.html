@@ -14,7 +14,7 @@
 <script type="application/processing">
     float[] x = new float[100];
     float[] y = new float[100];
-	float nowx = 0, nowy = 0, prex = 0, prey = 0;
+	float nowx = 0, nowy = 0, pre_snakex = 0, pre_snakey = 0;
     float segLength = 10;
     PImage a;
 
@@ -25,6 +25,7 @@
 	int is_collision_cnt = 0;
 	char[] score_text = new char[10];
 	int[] score = new int[3];
+	int iot_lag = 0;
 
 	void DrawScore() {
 		float cw = 450;
@@ -86,21 +87,15 @@
 		if (id < 0) tmpx = food_posx, tmpy = food_posy;
 		else tmpx = x[id], tmpy = y[id];
 	
-		float retval1 = dist_square(nowx-8, nowy-8, tmpx, tmpy);
-		float retval2 = dist_square(prex-8, prey-8, tmpx, tmpy);
-
-		if (retval1 < retval2) return retval1;
-		else return retval2;
+		return dist_square(nowx-8, nowy-8, tmpx, tmpy);
 	}
 
 	void check_collision() {
-		// Hit the wall.
 		if (nowx >= 640 || nowx < 10 || nowy >= 480 || nowy < 10) {
 			is_collision = true;
 			return;
 		}
 
-		// Hit the snake's body.
 		for (int i = 1; i < now_len-2; i++) {
 			if (point_dist(i) < (8*8)) {
 				is_collision = true;
@@ -141,15 +136,21 @@
         background(226);
         image( a, 0, 0 );
 
+		if (pre_snakex != snakeX || pre_snakey != snakeY)
+			iot_lag = 0;
+		else iot_lag++;
+
 		if (!is_collision) {
-			prex = nowx, prey = nowy;
-			nowx += snakeX, nowy += snakeY;
-			if (nowx>58 || nowy>58) check_collision();	
+			if (iot_lag < 50) {
+				pre_snakex = snakeX, pre_snakey = snakeY;
+				nowx += snakeX, nowy += snakeY;
+				if (nowx>58 || nowy>58) check_collision();	
+			}
 		}
 		else {
 			if (is_collision_cnt > 100) {
 				snakeX = 0, snakeY = 0;
-				prex = 0, prey = 0;
+				pre_snakex = 0, pre_snakey = 0;
 				nowx = 0, nowy = 0;
 				now_len = 20;
 				is_collision = false;
