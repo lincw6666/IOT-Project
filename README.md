@@ -11,6 +11,7 @@
 ### Overview
 
 - How to use
+- How to play
 - How to pending eat food and game over
 - Details of functions
 - Description of variables
@@ -36,10 +37,24 @@
     ![](https://i.imgur.com/3XoWYuW.png)
 
 ----
+### How to play
+- 用 gamma 控制 x， beta 控制 y
+- 假如與地面平行(螢幕朝上)。此時手機順時針旋轉則 gamma 增加，逆時針 gamma 減少。手機朝向身體旋轉則 beta 增加，反之 beta 減少。
+- 簡而言之，手機螢幕朝上
+    - 往右轉(順時針轉) => 蛇往右
+    - 往左轉(逆時針轉) => 蛇往左
+    - 往後傾(朝向身體旋轉) => 蛇往下
+    - 往前傾(向身體外旋轉) => 蛇往上
+
+----
 
 ### How to pending eat food and game over
 
 - Assume that the snake move from A to B.
+- 用距離判斷有沒有撞到身體或吃到食物。
+- 用 $(\overrightarrow{AB} \cdot \overrightarrow{AC}) * (\overrightarrow{BA} \cdot \overrightarrow{BC})$ 判斷為 Case 1 或 Case 2。
+    - $< 0:$ Case 1
+    - $> 0:$ Case 2
 - ==**Case 1:**==
     ![](https://i.imgur.com/PWrXvhl.png)
     
@@ -88,6 +103,7 @@
 - `is_collision_cnt`: We stop every thing while game over. After is_collision_cnt greater than the threshold, we reset the game.
 - `score_text`: The words show on the top right of the screen.
 - `score`: The score we get now.
+- `iot_lag`: Sometimes IOTtalk takes a lot of time to update. I call this "iot_lag". If iot_lag is too long, stop  moving the snake until next IOTtalk update.
 
 ---
 
@@ -116,6 +132,8 @@
 - Directory tree.
     ![](https://i.imgur.com/63eF37Z.png)
 - IOT talk config.
+    - Smartphone
+    - SnakeMoveModel
     - retval_args12 => `return [ args[1], args[2] ]`
     ![](https://i.imgur.com/o139zP9.png)
 
